@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db:5432/nutricao_db
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+    # Linkando o script de migração do Flyway
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: nutricao_db  # Nome da base de dados a ser criada
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - db
+
+volumes:
+  db_data:
