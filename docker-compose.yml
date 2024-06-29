@@ -21,7 +21,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: nutricao_db  # Nome da base de dados a ser criada
+      POSTGRES_DB: nutricao_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
